@@ -1,0 +1,6 @@
+{
+  "name": "BuildCart - From Foundation to Finish, We've Got You",
+  "description": "Construction and home-improvement marketplace based in Kenya combining quality materials and professional Supply & Fix installation services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
