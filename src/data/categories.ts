@@ -22,7 +22,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Application', options: ['Living Room', 'Bathroom & Wet Areas', 'Kitchen', 'Outdoor / Patio', 'Commercial'] }
     ],
     isCuratedHome: true,
-    image: '/src/assets/images/cat_tiles_flooring_1790163945050.jpg'
+    image: '/images/cat_tiles_flooring_1790163945050.jpg'
   },
   {
     id: 'paints-wall-finishes',
@@ -110,7 +110,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Finish', options: ['Super Matte Anti-Fingerprint', 'High Gloss Acrylic', 'Natural Wood Grain'] }
     ],
     isCuratedHome: true,
-    image: '/src/assets/images/cat_kitchen_cabinetry_1790163957321.jpg'
+    image: '/images/cat_kitchen_cabinetry_1790163957321.jpg'
   },
   {
     id: 'countertops-stone',
@@ -131,7 +131,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Finish', options: ['Polished High Gloss', 'Honed Matte', 'Leathered / Suede'] }
     ],
     isCuratedHome: true,
-    image: '/src/assets/images/cat_countertops_stone_1790163967414.jpg'
+    image: '/images/cat_countertops_stone_1790163967414.jpg'
   },
   {
     id: 'waterproofing',

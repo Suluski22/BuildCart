@@ -26,7 +26,7 @@ export const PRODUCTS: Product[] = [
     supplyAndFixAvailable: true,
     supplyAndFixRateKsh: 480,
     supplyAndFixUnit: 'per sqm installation with epoxy grout',
-    image: '/src/assets/images/cat_tiles_flooring_1790163945050.jpg'
+    image: '/images/cat_tiles_flooring_1790163945050.jpg'
   },
   {
     id: 'prod-tile-02',
@@ -267,7 +267,7 @@ export const PRODUCTS: Product[] = [
     supplyAndFixAvailable: true,
     supplyAndFixRateKsh: 4500,
     supplyAndFixUnit: 'per linear meter professional joinery install',
-    image: '/src/assets/images/cat_kitchen_cabinetry_1790163957321.jpg',
+    image: '/images/cat_kitchen_cabinetry_1790163957321.jpg',
     customizable: true
   },
   {
@@ -321,7 +321,7 @@ export const PRODUCTS: Product[] = [
     supplyAndFixAvailable: true,
     supplyAndFixRateKsh: 3800,
     supplyAndFixUnit: 'per linear meter (includes digital template, CNC cut & install)',
-    image: '/src/assets/images/cat_countertops_stone_1790163967414.jpg',
+    image: '/images/cat_countertops_stone_1790163967414.jpg',
     customizable: true
   },
   {

@@ -64,7 +64,7 @@ export default function App() {
         supplyAndFixAvailable: true,
         supplyAndFixRateKsh: 480,
         supplyAndFixUnit: 'per sqm installation with epoxy grout',
-        image: '/src/assets/images/cat_tiles_flooring_1790163945050.jpg'
+        image: '/images/cat_tiles_flooring_1790163945050.jpg'
       },
       quantity: 45,
       includeSupplyAndFix: true,

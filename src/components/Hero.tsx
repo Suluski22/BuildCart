@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Calendar } from 'lucide-react';
+import heroHouseImage from '../assets/images/hero_luxury_house_right_1790170113370.jpg';
 
 interface HeroProps {
   onShopClick: () => void;
@@ -25,7 +26,7 @@ export const Hero: React.FC<HeroProps> = ({
       {/* Background: Modern luxury architectural residence at night with warm golden lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <img
-          src="/src/assets/images/hero_luxury_house_right_1790170113370.jpg"
+          src={heroHouseImage}
           alt="Modern luxury house at night with warm interior lighting"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center lg:object-right"

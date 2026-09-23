@@ -15,7 +15,7 @@ export const SupplyAndFixSection: React.FC<SupplyAndFixSectionProps> = ({
       material: 'Tiles',
       pro: 'Tiler',
       subtitle: 'Rectified porcelain, screed leveling, miter cuts & epoxy grout',
-      image: '/src/assets/images/cat_tiles_flooring_1790163945050.jpg'
+      image: '/images/cat_tiles_flooring_1790163945050.jpg'
     },
     {
       material: 'Paint',
@@ -27,13 +27,13 @@ export const SupplyAndFixSection: React.FC<SupplyAndFixSectionProps> = ({
       material: 'Countertops',
       pro: 'Fabricator',
       subtitle: 'Laser templating, precision CNC cutting, undermount sinks & polishing',
-      image: '/src/assets/images/cat_countertops_stone_1790163967414.jpg'
+      image: '/images/cat_countertops_stone_1790163967414.jpg'
     },
     {
       material: 'Cabinetry',
       pro: 'Installer',
       subtitle: 'Laser-level carcass installation, soft-close hinge calibration & scribing',
-      image: '/src/assets/images/cat_kitchen_cabinetry_1790163957321.jpg'
+      image: '/images/cat_kitchen_cabinetry_1790163957321.jpg'
     }
   ];
 
