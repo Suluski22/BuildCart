@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white shadow-xs">
+    <header className="sticky top-0 z-40 w-full bg-white shadow-sm transition-shadow">
       {/* Top Bar - Exactly as in screenshot: Left tagline, Right yellow phone + number */}
       <div className="bg-[#001440] text-white py-2 sm:py-2.5 px-4 sm:px-6 lg:px-8 border-b border-[#001440]">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
