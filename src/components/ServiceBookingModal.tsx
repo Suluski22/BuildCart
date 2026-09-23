@@ -168,7 +168,7 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
                 >
                   {SUPPLY_AND_FIX_SERVICES.map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.index}. {s.title} — ({s.estimatedLaborRate})
+                      {s.title}
                     </option>
                   ))}
                 </select>

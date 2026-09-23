@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Search, Menu, X, Phone, MessageSquare, Wrench, Sparkles, ChevronRight, Layers, Award } from 'lucide-react';
+import { ShoppingCart, Search, X, Phone } from 'lucide-react';
 import { BuildCartLogo } from './BuildCartLogo';
 
 interface NavbarProps {
@@ -34,17 +34,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   cartCount,
   openCart,
   openBookingModal,
-  openBrandModal,
-  openPartnerModal,
   onSearch,
 }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
-    setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -56,36 +52,35 @@ export const Navbar: React.FC<NavbarProps> = ({
         onSearch(searchQuery.trim());
       }
       setSearchOpen(false);
-      setMobileMenuOpen(false);
     }
   };
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white shadow-xs">
-      {/* Top Bar - Preserved exact styling: Brand Promise on left, phone number on top right */}
-      <div className="bg-[#001440] text-white text-[11px] sm:text-xs py-2 px-3 sm:px-6 lg:px-8 border-b border-[#001440]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      {/* Top Bar - Exactly as in screenshot: Left tagline, Right yellow phone + number */}
+      <div className="bg-[#001440] text-white py-2 sm:py-2.5 px-4 sm:px-6 lg:px-8 border-b border-[#001440]">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Left: Tagline */}
-          <div className="text-white font-normal truncate max-w-[210px] sm:max-w-none">
+          <div className="text-white text-xs sm:text-[13px] font-normal tracking-wide">
             From foundation to finish, we've got you.
           </div>
 
-          {/* Right: Phone icon + phone number */}
+          {/* Right: Phone icon + phone number in yellow */}
           <a
             href="tel:0729256365"
-            className="flex items-center gap-1.5 text-[#FFC30B] hover:opacity-90 font-medium transition-opacity shrink-0 min-h-[28px]"
-            aria-label="Call BuildCart Kenya at 0729 256 365"
+            className="flex items-center gap-2 text-[#FFC30B] hover:text-[#eab309] transition-colors shrink-0 cursor-pointer"
+            aria-label="Call 0729 256 365"
           >
-            <Phone className="w-3.5 h-3.5 fill-[#FFC30B] stroke-[#FFC30B] shrink-0" />
-            <span className="font-bold tracking-normal whitespace-nowrap">0729 256 365</span>
+            <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#FFC30B] stroke-[#FFC30B] shrink-0" />
+            <span className="font-bold text-xs sm:text-sm tracking-normal whitespace-nowrap">0729 256 365</span>
           </a>
         </div>
       </div>
 
-      {/* Main Navigation Bar */}
+      {/* Main Navigation Bar - Structured exactly as in user screenshot */}
       <div className="bg-white border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-6">
-          {/* Left Zone: Brand Logo & Wordmark (Proper working hyperlink to Home) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4 lg:gap-8 overflow-x-auto scrollbar-none">
+          {/* Left Zone: Brand Logo & Wordmark + Subtitle */}
           <a
             href="#"
             onClick={(e) => {
@@ -95,28 +90,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center cursor-pointer focus:outline-none text-left py-1 shrink-0"
             aria-label="BuildCart Home"
           >
-            <div className="sm:hidden">
-              <BuildCartLogo
-                variant="light"
-                size="sm"
-                showTagline={true}
-                customTagline="foundation to finish"
-              />
-            </div>
-            <div className="hidden sm:block">
-              <BuildCartLogo
-                variant="light"
-                size="md"
-                showTagline={true}
-                customTagline="from foundation to finish"
-              />
-            </div>
+            <BuildCartLogo
+              variant="light"
+              size="md"
+              showTagline={true}
+              customTagline="from foundation to finish"
+            />
           </a>
 
-          {/* Center Zone: Main Navigation Links on Toolbar */}
-          {/* Visible on desktop/tablets with clean spacing and clear active indicators */}
+          {/* Center Zone: 6 Main Navigation Links */}
           <nav
-            className="hidden md:flex items-center gap-3.5 lg:gap-6 xl:gap-8 text-sm lg:text-[15px] font-medium text-slate-700"
+            className="flex items-center gap-5 sm:gap-6 lg:gap-8 xl:gap-9 shrink-0 text-slate-800 font-medium text-sm lg:text-[15px]"
             aria-label="Main Navigation"
           >
             {MAIN_NAV_ITEMS.map((item) => {
@@ -129,11 +113,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                     e.preventDefault();
                     handleNavClick(item.tab);
                   }}
-                  className={`transition-colors py-1 cursor-pointer whitespace-nowrap relative text-sm lg:text-[15px] ${
+                  className={`py-1 cursor-pointer whitespace-nowrap transition-colors ${
                     isActive
-                      ? 'text-[#001440] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#FFC30B] after:rounded-full'
-                      : 'text-slate-600 hover:text-[#001440]'
+                      ? 'text-[#001440] font-bold'
+                      : 'text-slate-700 hover:text-[#001440]'
                   }`}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   {item.name}
                 </a>
@@ -141,48 +126,37 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right Zone: Search, Cart Icon, Primary "Book a service" CTA & Mobile Hamburger */}
-          <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-4 shrink-0">
+          {/* Right Zone: Exact CTAs (Search, Cart, "Book a service") */}
+          <div className="flex items-center gap-6 sm:gap-7 lg:gap-8 shrink-0">
             {/* Search Icon */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-800 hover:text-[#001440] hover:bg-slate-100 rounded-full transition-colors cursor-pointer active:scale-95"
+              className="text-slate-800 hover:text-[#001440] transition-colors cursor-pointer flex items-center justify-center p-1"
               aria-label="Search building materials"
             >
-              <Search className="w-5 h-5 stroke-[2]" />
+              <Search className="w-5 h-5 text-slate-800" strokeWidth={1.8} />
             </button>
 
             {/* Shopping Cart Icon with item count badge */}
             <button
               onClick={openCart}
-              className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-800 hover:text-[#001440] hover:bg-slate-100 rounded-full transition-colors cursor-pointer active:scale-95"
+              className="relative text-slate-800 hover:text-[#001440] transition-colors cursor-pointer flex items-center justify-center p-1"
               aria-label={`Shopping cart with ${cartCount} items`}
             >
-              <ShoppingCart className="w-5 h-5 stroke-[2]" />
+              <ShoppingCart className="w-5 h-5 text-slate-800" strokeWidth={1.8} />
               {cartCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 bg-[#FFC30B] text-[#001440] font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center border border-white tabular-nums">
+                <span className="absolute -top-1.5 -right-2 bg-[#FFC30B] text-[#001440] font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center border border-white tabular-nums shadow-xs">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
             </button>
 
-            {/* Primary Action Button: "Book a service" - Visible and clickable on both mobile and desktop */}
+            {/* Primary Action Button: "Book a service" */}
             <button
               onClick={openBookingModal}
-              className="inline-flex items-center justify-center px-2.5 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-[#001440] bg-[#FFC30B] hover:bg-[#eab309] rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap active:scale-[0.98] min-h-[38px] sm:min-h-[40px]"
+              className="inline-flex items-center justify-center px-6 py-2.5 sm:py-3 text-sm font-bold text-[#001440] bg-[#FFC30B] hover:bg-[#eab309] rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap active:scale-[0.98]"
             >
-              <span className="sm:hidden">Book</span>
-              <span className="hidden sm:inline">Book a service</span>
-            </button>
-
-            {/* Mobile Hamburger Menu Toggle Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden w-10 h-10 flex items-center justify-center text-slate-800 hover:bg-slate-100 rounded-xl cursor-pointer active:scale-95 min-h-[44px] min-w-[44px]"
-              aria-label="Toggle navigation menu"
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              Book a service
             </button>
           </div>
         </div>
@@ -218,116 +192,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </form>
           </div>
-        )}
-
-        {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="md:hidden fixed inset-0 top-[108px] sm:top-[124px] bg-black/50 z-30 animate-in fade-in duration-150"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-
-            <div className="md:hidden absolute top-full left-0 right-0 z-40 bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-4 shadow-2xl max-h-[calc(100vh-124px)] overflow-y-auto">
-              {/* Primary Mobile Navigation Links - Exact 6 Links */}
-              <div className="flex flex-col divide-y divide-slate-100 text-sm font-semibold text-slate-800">
-                {MAIN_NAV_ITEMS.map((item) => {
-                  const isActive = activeTab === item.tab;
-                  return (
-                    <a
-                      key={item.tab}
-                      href={item.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNavClick(item.tab);
-                      }}
-                      className={`flex items-center justify-between py-3 px-2 rounded-lg text-left transition-colors min-h-[44px] cursor-pointer ${
-                        isActive ? 'text-[#001440] bg-[#F1F4FA] font-bold' : 'text-slate-800 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span>{item.name}</span>
-                        {item.tab === 'shop' && (
-                          <span className="text-[10px] bg-[#001440] text-white px-1.5 py-0.5 rounded font-normal">
-                            13 Categories
-                          </span>
-                        )}
-                        {item.tab === 'supply-and-fix' && (
-                          <span className="text-[10px] bg-[#FFC30B] text-[#001440] px-1.5 py-0.5 rounded font-bold">
-                            Pro Install
-                          </span>
-                        )}
-                      </span>
-                      <ChevronRight className="w-4 h-4 text-slate-400" />
-                    </a>
-                  );
-                })}
-              </div>
-
-              {/* Call to Actions in Drawer */}
-              <div className="pt-2 space-y-2.5">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openBookingModal();
-                  }}
-                  className="w-full py-3.5 px-4 text-center font-bold text-sm text-[#001440] bg-[#FFC30B] hover:bg-[#eab309] rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 min-h-[48px] active:scale-[0.98] cursor-pointer"
-                >
-                  <Wrench className="w-4 h-4 text-[#001440]" />
-                  <span>Book a service</span>
-                </button>
-
-                {/* Direct Kenyan Contacts in Drawer */}
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <a
-                    href="tel:0729256365"
-                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#F1F4FA] hover:bg-slate-200 text-[#001440] rounded-xl text-xs font-bold border border-slate-200 min-h-[44px]"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-[#001440]" />
-                    <span>Call Us</span>
-                  </a>
-                  <a
-                    href="https://wa.me/254729256365?text=Hello%20BuildCart%2C%20I%20have%20an%20inquiry%20regarding%20materials%20and%20Supply%20%26%20Fix."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#001440] text-[#FFC30B] rounded-xl text-xs font-bold min-h-[44px]"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    <span>WhatsApp</span>
-                  </a>
-                </div>
-
-                {/* Partner and Brand Guide Quick Links */}
-                {(openPartnerModal || openBrandModal) && (
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
-                    {openPartnerModal && (
-                      <button
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          openPartnerModal('professional');
-                        }}
-                        className="hover:text-[#001440] font-medium py-1 cursor-pointer"
-                      >
-                        Join as Pro / Supplier
-                      </button>
-                    )}
-                    {openBrandModal && (
-                      <button
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          openBrandModal();
-                        }}
-                        className="hover:text-[#001440] font-medium py-1 cursor-pointer"
-                      >
-                        Brand Guidelines
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </>
         )}
       </div>
     </header>

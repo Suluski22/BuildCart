@@ -269,11 +269,24 @@ export default function App() {
           />
         )}
 
-        {(activeTab === 'services' || activeTab === 'supply-and-fix') && (
+        {activeTab === 'services' && (
           <ServicesCatalogue
             onBookService={(s) => handleOpenBooking(s)}
             onShopMaterials={() => navigateTo('shop')}
           />
+        )}
+
+        {activeTab === 'supply-and-fix' && (
+          <div className="py-2">
+            <SupplyAndFixSection
+              onBookService={() => handleOpenBooking()}
+              onExploreServices={() => navigateTo('services')}
+            />
+            <ServicesCatalogue
+              onBookService={(s) => handleOpenBooking(s)}
+              onShopMaterials={() => navigateTo('shop')}
+            />
+          </div>
         )}
 
         {activeTab === 'how-it-works' && (
