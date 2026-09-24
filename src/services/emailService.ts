@@ -288,3 +288,108 @@ Source: Website – Partner Onboarding`;
 
   return await postToEmailEndpoint(recipientEmail, payload);
 }
+
+export interface OrderItemEmailData {
+  name: string;
+  quantity: number;
+  unit?: string;
+  unitPriceKsh: number;
+  subtotalKsh: number;
+  supplyAndFixIncluded: boolean;
+  supplyAndFixRateKsh?: number;
+  supplyAndFixLaborKsh?: number;
+}
+
+export interface OrderEmailData {
+  orderRef: string;
+  customerName: string;
+  phone: string;
+  deliveryEstate: string;
+  deliveryZoneLabel: string;
+  deliveryFeeKsh: number;
+  paymentMethodLabel: string;
+  items: OrderItemEmailData[];
+  materialsSubtotalKsh: number;
+  installationSubtotalKsh: number;
+  grandTotalKsh: number;
+}
+
+/**
+ * Delivers Order Placements to buildcartke@gmail.com
+ * Subject: New Order Placed – [Order Reference] – [Customer Name] – [Phone]
+ */
+export async function sendOrderEmail(data: OrderEmailData): Promise<SendResult> {
+  const recipientEmail = 'buildcartke@gmail.com';
+  const currentTimeEAT = formatCurrentTimeEAT();
+
+  const fullName = data.customerName.trim();
+  const phone = data.phone.trim();
+  const estate = data.deliveryEstate.trim();
+  const zone = `${data.deliveryZoneLabel} (KSh ${data.deliveryFeeKsh.toLocaleString()})`;
+  const paymentMethod = data.paymentMethodLabel;
+
+  // Email Subject: New Order Placed – [Order Reference] – [Customer Name] – [Phone]
+  const subject = `New Order Placed – ${data.orderRef} – ${fullName} – ${phone}`;
+
+  // Build readable item summary
+  const itemsTextLines = data.items.map((item, idx) => {
+    let line = `${idx + 1}. ${item.name} x ${item.quantity}${item.unit ? ` ${item.unit}` : ''} @ KSh ${item.unitPriceKsh.toLocaleString()} = KSh ${item.subtotalKsh.toLocaleString()}`;
+    if (item.supplyAndFixIncluded && item.supplyAndFixLaborKsh) {
+      line += ` [Supply & Install included: +KSh ${item.supplyAndFixLaborKsh.toLocaleString()} (@ KSh ${item.supplyAndFixRateKsh?.toLocaleString()}/unit)]`;
+    } else {
+      line += ` [Supply & Install: Not selected (Materials only)]`;
+    }
+    return line;
+  });
+
+  const bodyText = `New Order Placed
+
+Order Reference Number: ${data.orderRef}
+Date & Time: ${currentTimeEAT} EAT
+Source: Website – Checkout & Orders
+
+CUSTOMER DETAILS:
+Full Name: ${fullName}
+M-Pesa / Contact Phone: ${phone}
+Delivery Destination / Estate: ${estate}
+Delivery Zone: ${zone}
+Payment Method Selected: ${paymentMethod}
+
+ORDER ITEMS & BREAKDOWN:
+${itemsTextLines.join('\n')}
+
+FINANCIAL BREAKDOWN:
+Materials Subtotal: KSh ${data.materialsSubtotalKsh.toLocaleString()}
+Supply & Install Labor: KSh ${data.installationSubtotalKsh.toLocaleString()}
+Delivery Fee: KSh ${data.deliveryFeeKsh.toLocaleString()}
+Total Amount: KSh ${data.grandTotalKsh.toLocaleString()}
+
+Submitted: ${currentTimeEAT} EAT
+Source: Website – Checkout & Orders`;
+
+  const payload: Record<string, unknown> = {
+    _subject: subject,
+    _template: 'table',
+    _captcha: 'false',
+    'Order Reference Number': data.orderRef,
+    'Customer Full Name': fullName,
+    'M-Pesa / Contact Phone': phone,
+    'Delivery Destination / Estate': estate,
+    'Delivery Zone': zone,
+    'Payment Method Selected': paymentMethod,
+    'Order Items & Breakdown': itemsTextLines.join('\n\n'),
+    'Materials Subtotal': `KSh ${data.materialsSubtotalKsh.toLocaleString()}`,
+    'Supply & Install Option Status & Fee':
+      data.installationSubtotalKsh > 0
+        ? `Included (+KSh ${data.installationSubtotalKsh.toLocaleString()})`
+        : 'Not selected (Materials only)',
+    'Delivery Fee': `KSh ${data.deliveryFeeKsh.toLocaleString()}`,
+    'Total Amount (KSh)': `KSh ${data.grandTotalKsh.toLocaleString()}`,
+    'Date & Time': `${currentTimeEAT} EAT`,
+    Source: 'Website – Checkout & Orders',
+    message: bodyText,
+  };
+
+  return await postToEmailEndpoint(recipientEmail, payload);
+}
+

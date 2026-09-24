@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, Wrench, ArrowRight, ShieldCheck, CheckCircle2, Truck } from 'lucide-react';
+import { X, Trash2, Plus, Minus, Wrench, ArrowRight, ShieldCheck, CheckCircle2, Truck, Loader2, AlertCircle } from 'lucide-react';
 import { CartItem } from '../types';
+import { sendOrderEmail, OrderEmailData } from '../services/emailService';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -30,6 +31,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [deliveryZone, setDeliveryZone] = useState<'nairobi' | 'kiambu' | 'upcountry'>('nairobi');
   const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'card' | 'cod'>('mpesa');
   const [orderRef, setOrderRef] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Calculations
   const materialsSubtotal = items.reduce((acc, item) => {
@@ -46,16 +49,76 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const deliveryFee = items.length === 0 ? 0 : deliveryZone === 'nairobi' ? 1500 : deliveryZone === 'kiambu' ? 2500 : 4500;
   const grandTotal = materialsSubtotal + installationSubtotal + deliveryFee;
 
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
+    setIsSubmitting(true);
+
     const ref = 'BC-' + Math.floor(100000 + Math.random() * 900000);
-    setOrderRef(ref);
-    setCheckoutStep('success');
+
+    const zoneLabel =
+      deliveryZone === 'nairobi'
+        ? 'Nairobi Metro'
+        : deliveryZone === 'kiambu'
+        ? 'Kiambu / Machakos / Kajiado'
+        : 'Upcountry Freight / Regional';
+
+    const payLabel =
+      paymentMethod === 'mpesa'
+        ? 'Lipa na M-Pesa'
+        : paymentMethod === 'card'
+        ? 'Credit / Debit'
+        : 'Pay on Site';
+
+    const orderPayload: OrderEmailData = {
+      orderRef: ref,
+      customerName,
+      phone: customerPhone,
+      deliveryEstate,
+      deliveryZoneLabel: zoneLabel,
+      deliveryFeeKsh: deliveryFee,
+      paymentMethodLabel: payLabel,
+      items: items.map((item) => ({
+        name: item.product.name,
+        quantity: item.quantity,
+        unit: item.product.unit,
+        unitPriceKsh: item.product.priceKsh || 0,
+        subtotalKsh: (item.product.priceKsh || 0) * item.quantity,
+        supplyAndFixIncluded: !!item.includeSupplyAndFix,
+        supplyAndFixRateKsh: item.product.supplyAndFixRateKsh,
+        supplyAndFixLaborKsh:
+          item.includeSupplyAndFix && item.product.supplyAndFixRateKsh
+            ? item.product.supplyAndFixRateKsh * item.quantity
+            : 0,
+      })),
+      materialsSubtotalKsh: materialsSubtotal,
+      installationSubtotalKsh: installationSubtotal,
+      grandTotalKsh: grandTotal,
+    };
+
+    try {
+      const res = await sendOrderEmail(orderPayload);
+      if (res.success) {
+        setOrderRef(ref);
+        setCheckoutStep('success');
+      } else {
+        setErrorMessage(
+          res.message ||
+            'Unable to transmit order to buildcartke@gmail.com. Please check your connection and try again.'
+        );
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Network error';
+      setErrorMessage(`Order submission failed (${msg}). Please verify your connection and try again.`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDone = () => {
     onClearCart();
     setCheckoutStep('cart');
+    setErrorMessage('');
     onClose();
   };
 
@@ -286,6 +349,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </button>
                   </div>
                 </div>
+
+                {errorMessage && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2 animate-in fade-in duration-200">
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                    <div className="flex-1 leading-relaxed">{errorMessage}</div>
+                  </div>
+                )}
               </form>
             )}
 
@@ -376,18 +446,32 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => setCheckoutStep('cart')}
-                    className="py-3 px-4 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 cursor-pointer min-h-[48px]"
+                    disabled={isSubmitting}
+                    onClick={() => {
+                      setErrorMessage('');
+                      setCheckoutStep('cart');
+                    }}
+                    className="py-3 px-4 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 cursor-pointer min-h-[48px] disabled:opacity-50"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
                     form="checkout-form"
-                    className="flex-1 py-3 px-4 text-xs sm:text-sm font-bold text-[#001440] bg-[#FFC30B] hover:bg-[#e8b209] rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[48px]"
+                    disabled={isSubmitting}
+                    className="flex-1 py-3 px-4 text-xs sm:text-sm font-bold text-[#001440] bg-[#FFC30B] hover:bg-[#e8b209] rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[48px] disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
-                    <span className="truncate">Confirm (KSh {grandTotal.toLocaleString()})</span>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                        <span className="truncate">Placing Order...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <span className="truncate">Confirm (KSh {grandTotal.toLocaleString()})</span>
+                      </>
+                    )}
                   </button>
                 </div>
               )}

@@ -36,40 +36,8 @@ export default function App() {
   const [brandModalOpen, setBrandModalOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
 
-  // Cart State (Initialized with 1 realistic initial product to show functionality immediately)
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 'cart-sample-1',
-      product: {
-        id: 'prod-tile-01',
-        categoryId: 'tiles-flooring',
-        name: 'Calacatta Imperial Polished Porcelain Floor Tile (60x120cm)',
-        brand: 'Ceramica Venti',
-        priceKsh: 2850,
-        unit: 'per sqm',
-        pricingType: 'fixed',
-        rating: 4.9,
-        reviewsCount: 42,
-        inStock: true,
-        leadTime: 'Same day or next day in Nairobi & Kiambu',
-        description: 'High-definition Italian ink-jet marble veining on rectified full-body porcelain.',
-        specs: {
-          material: 'Full Body Porcelain',
-          finish: 'High Gloss Polished',
-          size: '60x120 cm (Rectified Edge)',
-          colour: 'Warm White with Gold-Grey Veins',
-          application: 'Living Room, Hallway, Master Bedroom',
-          origin: 'Italy'
-        },
-        supplyAndFixAvailable: true,
-        supplyAndFixRateKsh: 480,
-        supplyAndFixUnit: 'per sqm installation with epoxy grout',
-        image: '/images/cat_tiles_flooring_1790163945050.jpg'
-      },
-      quantity: 45,
-      includeSupplyAndFix: true,
-    }
-  ]);
+  // Cart State (Starts empty until user adds products)
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // Cart Handlers
   const handleAddToCart = (
